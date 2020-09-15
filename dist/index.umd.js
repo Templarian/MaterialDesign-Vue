@@ -33,12 +33,12 @@
 
   function addIcons(icons, prefix) {
     if (Object.prototype.hasOwnProperty.call(definitions, prefix)) {
-      icons.forEach((icon, path) => {
+      for (const [icon, path] of Object.entries(icons)) {
         definitions[prefix][icon] = {
           path,
           usage: 0,
         };
-      });
+      }
     }
   }
 
