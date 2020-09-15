@@ -54,7 +54,7 @@ export default {
       default: 0,
     },
     spin: {
-      type: Boolean,
+      type: [Boolean, Number],
       default: false,
     },
   },
@@ -118,7 +118,7 @@ export default {
         spinElement = createElement(
           "g",
           {
-            attrs: {
+            style: {
               animation: `spin${inverse ? "-inverse" : ""} linear ${Math.abs(
                 spinSec
               )}s infinite`,
