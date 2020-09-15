@@ -16,8 +16,8 @@ function camelize(str) {
 function getIconFreeId() {
   let id = 0
 
-  for (let prefixIcons of definitions) {
-    for (let icon of prefixIcons) {
+  for (let prefixIcons of Object.values(definitions)) {
+    for (let icon of Object.values(prefixIcons)) {
       id += icon.usage
     }
   }
