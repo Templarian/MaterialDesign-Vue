@@ -78,6 +78,21 @@ function normalizeIconArgs(icon) {
   }
 }
 
+function getMdiSizeFromClass(className) {
+  switch (className) {
+    case "mdi-18px":
+      return 1.225
+    case "mdi-24px":
+      return 1.5
+    case "mdi-36px":
+      return 2.25
+    case "mdi-48px":
+      return 3
+  }
+
+  return false
+}
+
 var VueMdi = {
   name: "VueMdi",
   functional: true,
@@ -94,7 +109,7 @@ var VueMdi = {
       default: null,
     },
     size: {
-      type: [Object, Number],
+      type: [Object, Number, String],
       default: null,
     },
     color: {
@@ -133,8 +148,19 @@ var VueMdi = {
       const style = {};
 
       if (props.size !== null) {
-        style.width = `${props.size * 1.5}rem`;
-        style.height = style.width;
+        if (typeof props.size === "string") {
+          const iSize = getMdiSizeFromClass(props.size);
+
+          if (iSize) {
+            style.width = `${iSize}rem`;
+          }
+        } else {
+          style.width = `${props.size * 1.5}rem`;
+        }
+
+        if (style.width) {
+          style["height"] = style.width;
+        }
       }
 
       if (props.horizontal) {
