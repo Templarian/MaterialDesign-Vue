@@ -2,7 +2,7 @@
   "name": "@mdi/vue",
   "version": "1.0.0",
   "description": "Vue Dist for Material Design Icons",
-  "main": "dist/index.imd.js",
+  "main": "dist/index.umd.js",
   "module": "dist/index.es.js",
   "scripts": {
     "build": "rollup -c rollup.config.js",
