@@ -8,7 +8,7 @@ export default {
   install(Vue) {
     Vue.component(componentName, VueMdi)
   },
-  add(icons, prefix) {
-    addIcons(icons, prefix || defaultIconPrefix)
+  add(icons, prefix = defaultIconPrefix) {
+    addIcons(icons, prefix)
   },
 }
