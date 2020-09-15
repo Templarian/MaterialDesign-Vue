@@ -28,8 +28,10 @@
     "url": "https://github.com/victor192/MaterialDesign-Vue/issues"
   },
   "homepage": "https://github.com/victor192/MaterialDesign-Vue#readme",
+  "peerDependencies": {
+    "@mdi/js": "^5.5.55"
+  },
   "devDependencies": {
-    "@mdi/js": "^5.5.55",
     "babel-eslint": "^10.1.0",
     "eslint": "^7.9.0",
     "eslint-config-prettier": "^6.11.0",
