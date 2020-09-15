@@ -169,26 +169,30 @@ export default {
         },
         [
           ...(props.title
-            ? createElement(
-                "title",
-                {
-                  attrs: {
-                    id: labelledById,
+            ? [
+                createElement(
+                  "title",
+                  {
+                    attrs: {
+                      id: labelledById,
+                    },
                   },
-                },
-                _v(props.title)
-              )
+                  _v(props.title)
+                ),
+              ]
             : []),
           ...(props.description
-            ? createElement(
-                "desc",
-                {
-                  attrs: {
-                    id: describedById,
+            ? [
+                createElement(
+                  "desc",
+                  {
+                    attrs: {
+                      id: describedById,
+                    },
                   },
-                },
-                _v(props.description)
-              )
+                  _v(props.description)
+                ),
+              ]
             : []),
           spinElement,
         ]

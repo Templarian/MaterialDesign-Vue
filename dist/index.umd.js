@@ -124,7 +124,7 @@
         default: false,
       },
     },
-    render(createElement, { props }) {
+    render(createElement, { props, _v }) {
       const iconProp = normalizeIconArgs(props.icon);
 
       if (!iconProp) {
@@ -172,8 +172,7 @@
         }
 
         let spinElement = pathElement;
-        const spinSec =
-          !!props.spin || typeof props.spin !== "number" ? 2 : props.spin;
+        const spinSec = typeof props.spin !== "number" ? 2 : props.spin;
         let inverse = props.horizontal || props.vertical;
 
         if (spinSec < 0) {
@@ -236,26 +235,30 @@
           },
           [
             ...(props.title
-              ? createElement(
-                  "title",
-                  {
-                    attrs: {
-                      id: labelledById,
+              ? [
+                  createElement(
+                    "title",
+                    {
+                      attrs: {
+                        id: labelledById,
+                      },
                     },
-                  },
-                  props.title
-                )
+                    _v(props.title)
+                  ),
+                ]
               : []),
             ...(props.description
-              ? createElement(
-                  "desc",
-                  {
-                    attrs: {
-                      id: describedById,
+              ? [
+                  createElement(
+                    "desc",
+                    {
+                      attrs: {
+                        id: describedById,
+                      },
                     },
-                  },
-                  props.description
-                )
+                    _v(props.description)
+                  ),
+                ]
               : []),
             spinElement,
           ]
