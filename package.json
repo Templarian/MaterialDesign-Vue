@@ -2,7 +2,8 @@
   "name": "@mdi/vue",
   "version": "1.0.0",
   "description": "Vue Dist for Material Design Icons",
-  "main": "index.js",
+  "main": "dist/index.imd.js",
+  "module": "dist/index.es.js",
   "scripts": {
     "build": "rollup -c rollup.config.js",
     "lint": "eslint --ext .js,.vue --ignore-path .gitignore .",
