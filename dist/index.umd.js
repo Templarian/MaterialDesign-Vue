@@ -66,7 +66,7 @@
     return false
   }
 
-  function normalizeIconArgs(icon) {
+  const normalizeIconArgs = (icon) => {
     if (icon === null) {
       return null
     }
@@ -82,22 +82,66 @@
     if (typeof icon === "string") {
       return { prefix: "mdi", name: icon }
     }
-  }
+  };
 
-  function getMdiSizeFromClass(className) {
-    switch (className) {
-      case "mdi-18px":
-        return 1.225
-      case "mdi-24px":
-        return 1.5
-      case "mdi-36px":
-        return 2.25
-      case "mdi-48px":
-        return 3
+  const normalizeIconSize = (value) => {
+    if (typeof value === "string") {
+      switch (value) {
+        case "mdi-18px":
+          return 1.225
+        case "mdi-24px":
+          return 1.5
+        case "mdi-36px":
+          return 2.25
+        case "mdi-48px":
+          return 3
+      }
+    } else if (typeof value === "number") {
+      return value * 1.5
     }
 
     return false
-  }
+  };
+
+  const normalizeIconRotate = (value) => {
+    if (typeof value === "string") {
+      switch (value) {
+        case "mdi-rotate-45":
+          return 45
+        case "mdi-rotate-90":
+          return 90
+        case "mdi-rotate-135":
+          return 135
+        case "mdi-rotate-180":
+          return 180
+      }
+    }
+
+    return value
+  };
+
+  const normalizeIconFlip = (value) => {
+    if (typeof value === "string") {
+      switch (value) {
+        case "vertical":
+        case "mdi-flip-v":
+          return { vertical: true, horizontal: false }
+        case "horizontal":
+        case "mdi-flip-h":
+          return { vertical: false, horizontal: true }
+      }
+    }
+
+    return { vertical: false, horizontal: false }
+  };
+
+  const normalizeIconSpin = (value) => {
+    if (typeof value === "string" && value === "mdi-spin") {
+      return true
+    }
+
+    return value
+  };
 
   var VueMdi = {
     name: "VueMdi",
@@ -122,20 +166,16 @@
         type: String,
         default: "#000",
       },
-      horizontal: {
-        type: Boolean,
-        default: false,
-      },
-      vertical: {
-        type: Boolean,
+      flip: {
+        type: [Boolean, String],
         default: false,
       },
       rotate: {
-        type: Number,
+        type: [Number, String],
         default: 0,
       },
       spin: {
-        type: [Boolean, Number],
+        type: [Boolean, Number, String],
         default: false,
       },
     },
@@ -153,32 +193,27 @@
         const transform = [];
         const style = {};
 
-        if (props.size !== null) {
-          if (typeof props.size === "string") {
-            const iSize = getMdiSizeFromClass(props.size);
+        const iconSize = normalizeIconSize(props.size);
 
-            if (iSize) {
-              style.width = `${iSize}rem`;
-            }
-          } else {
-            style.width = `${props.size * 1.5}rem`;
-          }
-
-          if (style.width) {
-            style["height"] = style.width;
-          }
+        if (iconSize) {
+          style.width = `${iconSize}rem`;
+          style.height = style.width;
         }
 
-        if (props.horizontal) {
+        const iconFlip = normalizeIconFlip(props.flip);
+
+        if (iconFlip.horizontal) {
           transform.push("scaleX(-1)");
         }
 
-        if (props.vertical) {
+        if (iconFlip.vertical) {
           transform.push("scaleY(-1)");
         }
 
-        if (props.rotate !== 0) {
-          transform.push(`rotate(${props.rotate}deg)`);
+        const iconRotate = normalizeIconRotate(props.rotate);
+
+        if (iconRotate !== 0) {
+          transform.push(`rotate(${iconRotate}deg)`);
         }
 
         if (props.color !== null) {
@@ -198,14 +233,15 @@
         }
 
         let spinElement = pathElement;
-        const spinSec = typeof props.spin !== "number" ? 2 : props.spin;
-        let inverse = props.horizontal || props.vertical;
+        const iconSpin = normalizeIconSpin(props.spin);
+        const spinSec = typeof iconSpin !== "number" ? 2 : iconSpin;
+        let inverse = iconFlip.horizontal || iconFlip.vertical;
 
         if (spinSec < 0) {
           inverse = !inverse;
         }
 
-        if (props.spin) {
+        if (iconSpin) {
           spinElement = createElement(
             "g",
             {
@@ -218,7 +254,7 @@
             },
             [
               pathElement,
-              ...(!(props.horizontal || props.vertical || props.rotate !== 0)
+              ...(!(iconFlip.horizontal || iconFlip.vertical || iconRotate !== 0)
                 ? createElement("rect", {
                     attrs: {
                       width: 24,
