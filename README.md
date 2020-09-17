@@ -2,6 +2,8 @@
 
 VueJS/VueTS Component for Material Design Icons
 
+[Patreon](https://www.patreon.com/cryptomath)
+
 ## Installation
 
 Install the icon content [@mdi/js](https://github.com/Templarian/MaterialDesign-JS) package and this module

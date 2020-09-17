@@ -32,6 +32,7 @@ export default {
             debug: true,
             targets: { browsers: ["> 1%", "last 2 versions", "ie > 9"] },
             modules: false,
+            useBuiltIns: false,
           },
         ],
       ],
