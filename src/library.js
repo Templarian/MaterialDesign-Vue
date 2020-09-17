@@ -1,7 +1,7 @@
 const definitions = {}
 let id = 0
 
-function camelize(str) {
+const camelize = (str) => {
   const arr = str.split("-")
   const capital = arr.map((item, index) =>
     index
