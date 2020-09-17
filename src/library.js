@@ -1,6 +1,5 @@
-const definitions = {
-  mdi: {},
-}
+const definitions = {}
+let id = 0
 
 function camelize(str) {
   const arr = str.split("-")
@@ -13,49 +12,32 @@ function camelize(str) {
   return capital.join("")
 }
 
-function getIconFreeId() {
-  let id = 0
+export const getIcon = (iconName) => {
+  const iconCamelName = camelize("mdi-" + iconName)
 
-  for (let prefixIcons of Object.values(definitions)) {
-    for (let icon of Object.values(prefixIcons)) {
-      id += icon.usage
-    }
-  }
+  if (Object.prototype.hasOwnProperty.call(definitions, iconCamelName)) {
+    const iconDefinition = definitions[iconCamelName]
 
-  return id + 1
-}
-
-export function addIcons(icons, prefix) {
-  if (Object.prototype.hasOwnProperty.call(definitions, prefix)) {
-    for (const [icon, path] of Object.entries(icons)) {
-      definitions[prefix][icon] = {
-        path,
-        usage: 0,
-      }
-    }
-  }
-}
-
-export function getIcon(icon) {
-  const iconCamelName = camelize(icon.name)
-
-  if (
-    Object.prototype.hasOwnProperty.call(definitions, icon.prefix) &&
-    Object.prototype.hasOwnProperty.call(
-      definitions[icon.prefix],
-      iconCamelName
-    )
-  ) {
-    const iconDefinition = definitions[icon.prefix][iconCamelName]
-    const iconId = getIconFreeId()
-
-    iconDefinition.usage++
+    id++
 
     return {
-      id: iconId,
-      path: iconDefinition.path,
+      id,
+      path: iconDefinition,
     }
   }
 
   return false
+}
+
+export const library = {
+  add(icons) {
+    for (const [icon, path] of Object.entries(icons)) {
+      definitions[icon] = path
+    }
+  },
+  reset() {
+    for (const icon of Object.getOwnPropertyNames(definitions)) {
+      delete definitions[icon]
+    }
+  },
 }

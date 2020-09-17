@@ -1,88 +1,14 @@
 import { getIcon } from "../library"
 
-const normalizeIconArgs = (icon) => {
-  if (icon === null) {
-    return null
-  }
-
-  if (typeof icon === "object" && icon.prefix && icon.name) {
-    return icon
-  }
-
-  if (Array.isArray(icon) && icon.length === 2) {
-    return { prefix: icon[0], name: icon[1] }
-  }
-
-  if (typeof icon === "string") {
-    return { prefix: "mdi", name: icon }
-  }
-}
-
-const normalizeIconSize = (value) => {
-  if (typeof value === "string") {
-    switch (value) {
-      case "mdi-18px":
-        return 1.225
-      case "mdi-24px":
-        return 1.5
-      case "mdi-36px":
-        return 2.25
-      case "mdi-48px":
-        return 3
-    }
-  } else if (typeof value === "number") {
-    return value * 1.5
-  }
-
-  return false
-}
-
-const normalizeIconRotate = (value) => {
-  if (typeof value === "string") {
-    switch (value) {
-      case "mdi-rotate-45":
-        return 45
-      case "mdi-rotate-90":
-        return 90
-      case "mdi-rotate-135":
-        return 135
-      case "mdi-rotate-180":
-        return 180
-    }
-  }
-
-  return value
-}
-
-const normalizeIconFlip = (value) => {
-  if (typeof value === "string") {
-    switch (value) {
-      case "vertical":
-      case "mdi-flip-v":
-        return { vertical: true, horizontal: false }
-      case "horizontal":
-      case "mdi-flip-h":
-        return { vertical: false, horizontal: true }
-    }
-  }
-
-  return { vertical: false, horizontal: false }
-}
-
-const normalizeIconSpin = (value) => {
-  if (typeof value === "string" && value === "mdi-spin") {
-    return true
-  }
-
-  return value
-}
+const removeMdiPrefix = (str) => str.replace("mdi-", "")
 
 export default {
   name: "VueMdi",
   functional: true,
   props: {
     icon: {
-      type: [Object, Array, String],
+      type: String,
+      required: true,
     },
     title: {
       type: [Object, String],
@@ -93,61 +19,54 @@ export default {
       default: null,
     },
     size: {
-      type: [Object, Number, String],
+      type: [Object, Number],
       default: null,
     },
     color: {
       type: String,
       default: "#000",
     },
-    flip: {
-      type: [Boolean, String],
+    horizontal: {
+      type: Boolean,
+      default: false,
+    },
+    vertical: {
+      type: Boolean,
       default: false,
     },
     rotate: {
-      type: [Number, String],
+      type: Number,
       default: 0,
     },
     spin: {
-      type: [Boolean, Number, String],
+      type: [Boolean, Number],
       default: false,
     },
   },
   render(createElement, { props, _v }) {
-    const iconProp = normalizeIconArgs(props.icon)
-
-    if (!iconProp) {
-      throw new Error("Invalid icon property value")
-    }
-
-    const icon = getIcon(iconProp)
+    const iconName = removeMdiPrefix(props.icon)
+    const icon = getIcon(iconName)
 
     if (icon) {
       const pathStyle = {}
       const transform = []
       const style = {}
 
-      const iconSize = normalizeIconSize(props.size)
-
-      if (iconSize) {
-        style.width = `${iconSize}rem`
+      if (props.size) {
+        style.width = `${props.size * 1.5}rem`
         style.height = style.width
       }
 
-      const iconFlip = normalizeIconFlip(props.flip)
-
-      if (iconFlip.horizontal) {
+      if (props.horizontal) {
         transform.push("scaleX(-1)")
       }
 
-      if (iconFlip.vertical) {
+      if (props.vertical) {
         transform.push("scaleY(-1)")
       }
 
-      const iconRotate = normalizeIconRotate(props.rotate)
-
-      if (iconRotate !== 0) {
-        transform.push(`rotate(${iconRotate}deg)`)
+      if (props.rotate !== 0) {
+        transform.push(`rotate(${props.rotate}deg)`)
       }
 
       if (props.color !== null) {
@@ -167,15 +86,14 @@ export default {
       }
 
       let spinElement = pathElement
-      const iconSpin = normalizeIconSpin(props.spin)
-      const spinSec = typeof iconSpin !== "number" ? 2 : iconSpin
-      let inverse = iconFlip.horizontal || iconFlip.vertical
+      const spinSec = typeof props.spin !== "number" ? 2 : props.spin
+      let inverse = props.horizontal || props.vertical
 
       if (spinSec < 0) {
         inverse = !inverse
       }
 
-      if (iconSpin) {
+      if (props.spin) {
         spinElement = createElement(
           "g",
           {
@@ -188,7 +106,7 @@ export default {
           },
           [
             pathElement,
-            ...(!(iconFlip.horizontal || iconFlip.vertical || iconRotate !== 0)
+            ...(!(props.horizontal || props.vertical || props.rotate !== 0)
               ? createElement("rect", {
                   attrs: {
                     width: 24,
