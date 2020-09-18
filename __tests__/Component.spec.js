@@ -71,6 +71,17 @@ describe("VueMdi component", () => {
 
     expect(path.attributes().style).toBe("fill: #888;")
   })
+
+  it("accepts a 'spin' property", async () => {
+    await wrapper.setProps({ spin: true })
+
+    //  Checking the style animation property
+    const g = wrapper.find("g")
+
+    expect(g.attributes().style).toBe(
+      "animation: spin linear 2s infinite; transform-origin: center;"
+    )
+  })
 })
 
 //  TODO: Need more tests

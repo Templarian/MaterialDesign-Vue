@@ -107,13 +107,15 @@ export default {
           [
             pathElement,
             ...(!(props.horizontal || props.vertical || props.rotate !== 0)
-              ? createElement("rect", {
-                  attrs: {
-                    width: 24,
-                    height: 24,
-                    fill: "transparent",
-                  },
-                })
+              ? [
+                  createElement("rect", {
+                    attrs: {
+                      width: 24,
+                      height: 24,
+                      fill: "transparent",
+                    },
+                  }),
+                ]
               : []),
           ]
         )
