@@ -1,0 +1,15 @@
+.mdi-icon {
+  width: 1.5rem;
+  height: 1.5rem;
+}
+
+@keyframes spin-inverse {
+  to {
+    transform: rotate(-360deg)
+  }
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg)
+  }
+}

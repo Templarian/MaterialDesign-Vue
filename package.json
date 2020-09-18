@@ -4,8 +4,12 @@
   "description": "Vue Dist for Material Design Icons",
   "main": "dist/index.umd.js",
   "module": "dist/index.es.js",
+  "sideEffects": [
+    "*.css",
+    "*.scss"
+  ],
   "scripts": {
-    "build": "rollup -c rollup.config.js",
+    "build": "sass src/scss/mdi.scss dist/mdi.css && rollup -c rollup.config.js",
     "dist": "cross-env NODE_ENV=production npm run build",
     "lint": "eslint --ext .js,.vue --ignore-path .gitignore .",
     "lintfix": "eslint --fix --ext .js,.vue --ignore-path .gitignore .",
@@ -54,6 +58,7 @@
     "jest": "^26.4.2",
     "prettier": "^2.1.1",
     "rollup": "^2.26.11",
+    "sass": "^1.26.11",
     "vue-jest": "^3.0.7"
   },
   "dependencies": {}
