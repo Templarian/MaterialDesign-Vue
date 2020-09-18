@@ -32,8 +32,8 @@ describe("VueMdi component", () => {
     expect(path.attributes("d")).toBe(mdiTestIcon)
   })
 
-  it("accepts a 'title' property", () => {
-    wrapper.setProps({ title: "foo" })
+  it("accepts a 'title' property", async () => {
+    await wrapper.setProps({ title: "foo" })
 
     //  Cheking for rendering of the aria-labelledby attribute
     expect(wrapper.attributes()["aria-labelledby"]).toMatch("icon_labelledby")
@@ -44,13 +44,11 @@ describe("VueMdi component", () => {
     expect(title.text()).toEqual("foo")
   })
 
-  it("accepts a 'description' property", () => {
-    wrapper.setProps({ title: "foo", description: "bar" })
+  it("accepts a 'description' property", async () => {
+    await wrapper.setProps({ title: "foo", description: "bar" })
 
     //  Cheking for rendering of the aria-labelledby attribute
-    expect(wrapper.attributes()["aria-labelledby"])
-      .toMatch("icon_labelledby")
-      .toMatch("icon_describedby")
+    expect(wrapper.attributes()["aria-labelledby"]).toMatch("icon_describedby")
 
     //  Cheking for rendering description
     const description = wrapper.find("desc")
@@ -58,20 +56,20 @@ describe("VueMdi component", () => {
     expect(description.text()).toEqual("bar")
   })
 
-  it("accepts a 'size' property", () => {
-    wrapper.setProps({ size: 2 })
+  it("accepts a 'size' property", async () => {
+    await wrapper.setProps({ size: 2 })
 
     //  Checking the styles width and height properties of the svg element
     expect(wrapper.attributes().style).toBe("width: 3rem; height: 3rem;")
   })
 
-  it("accepts a 'color' property", () => {
-    wrapper.setProps({ color: "#888" })
+  it("accepts a 'color' property", async () => {
+    await wrapper.setProps({ color: "#888" })
 
     //  Checking the fill property of the path element
     const path = wrapper.find("path")
 
-    expect(path.attributes()["fill"]).toEqual("#888")
+    expect(path.attributes().style).toBe("fill: #888;")
   })
 })
 

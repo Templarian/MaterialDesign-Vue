@@ -43,7 +43,7 @@ export default {
       default: false,
     },
   },
-  render(createElement, { props, _v }) {
+  render(createElement, { props }) {
     const iconName = removeMdiPrefix(props.icon)
     const icon = getIcon(iconName)
 
@@ -157,7 +157,7 @@ export default {
                       id: labelledById,
                     },
                   },
-                  _v(props.title)
+                  props.title
                 ),
               ]
             : []),
@@ -170,7 +170,7 @@ export default {
                       id: describedById,
                     },
                   },
-                  _v(props.description)
+                  props.description
                 ),
               ]
             : []),
