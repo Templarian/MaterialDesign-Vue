@@ -19,6 +19,14 @@ And import VueMdi `css` file in your app entry point
 import '@mdi/vue/dist/mdi.css';
 ```
 
+### Add more icons packs
+
+You can also include a set of [Material Design Icons Light](https://github.com/Templarian/MaterialDesignLight)
+
+```
+npm install --save @mdi/light-js
+```
+
 ## Usage
 
 ### Recommended
@@ -64,6 +72,113 @@ export default {
 </script>
 ```
 
+#### Using default icons
+
+```javascript
+import { library } from '@mdi/vue'
+import { mdiAccount } from '@mdi/js'
+
+library.add({ mdiAccount })
+```
+
+```html
+<!-- The default MDI icons is implicit -->
+<vue-mdi icon="account" />
+
+<!-- It's better to be explicit -->
+<vue-mdi :icon="['mdi', 'account']" />
+```
+
+#### Using Light icons
+
+```javascript
+import { library } from '@mdi/vue'
+import { mdilAccount } from '@mdi/light-js'
+
+library.add({ mdilAccount })
+```
+
+```html
+<vue-mdi :icon="['mdil', 'account']" />
+```
+
+### The icon property
+
+The `icon` property of the `VueMdi` component can be used in the following way:
+
+#### Shorthand that assumes a prefix of `mdi`
+
+```html
+<vue-mdi icon="android" />
+<vue-mdi icon="facebook" />
+
+<vue-mdi :icon="['mdi', 'android']" /> # Same as above
+<vue-mdi :icon="['mdi', 'facebook']" /> # Same as above
+```
+
+For the above to work you must add the `android` and `facebook` icon to the library.
+
+```javascript
+import { library } from '@mdi/vue'
+import { mdiAndroid, mdiFacebook } from '@mdi/js'
+
+library.add({ mdiAndroid, mdiFacebook })
+```
+
+In the event that you are using an icon with a multi-word name please note that
+you would need to pass in the icon name using _kebab-case_ as opposed to _camelCase_.
+
+```html
+<vue-mdi icon="android" />  # import { mdiAndroid } from '@mdi/js'
+```
+
+#### Explicit prefix
+
+```html
+<vue-mdi :icon="['mdi', 'facebook']" />
+```
+
+For the above to work you must add the `facebook` icon (MDI default pack) to the library.
+
+```javascript
+import { library } from '@mdi/vue'
+import { mdiFacebook } from '@mdi/js'
+
+library.add({ mdiFacebook })
+```
+
+#### Icon property declared by the object
+```vue
+<template>
+  <div id="app">
+    <vue-mdi :icon="icon" />
+  </div>
+</template>
+
+<script>
+export default {
+  name: 'App',
+  data() {
+    return {
+      icon: {
+        prefix: 'mdil',
+        name: 'account'
+      }
+    }
+  }
+}
+</script>
+```
+
+For the above to work you must add the MDI Light `account` icon to the library.
+
+```javascript
+import { library } from '@mdi/vue'
+import { mdilAccount } from '@mdi/light-js'
+
+library.add({ mdilAccount })
+```
+
 ### Using the concept of a library
 
 Explicitly selecting icons offer the advantage of only bundling the icons that you
@@ -74,9 +189,10 @@ thousands of icons to just the small number that are normally used.
 
 ```javascript
 import { library } from '@mdi/vue'
-import { mdiAccount, mdiBlockHelper } from '@mdi/js';
+import { mdiAccount, mdiBlockHelper } from '@mdi/js'
+import { mdilAccount } from '@mdi/light-js'
 
-library.add({ mdiAccount, mdiBlockHelper })
+library.add({ mdiAccount, mdiBlockHelper, mdilAccount })
 ```
 
 #### Reset all loaded icons
@@ -91,7 +207,7 @@ library.reset()
 
 | Prop        | PropTypes      | Default  | Details |
 |-------------|----------------|----------|---------|
-| icon        | string         | required | MDI icon name in kebab-case format (without the `mdi-` prefix). Make sure that you added this icon from [@mdi/js](https://templarian.github.io/@mdi/js) to library |
+| icon        | object, array, string | required | MDI icon property (see above). Make sure that you added this icon from [@mdi/js](https://github.com/Templarian/MaterialDesign-JS) or [@mdi/light-js](https://github.com/Templarian/MaterialDesignLight-JS) to the library |
 | title       | string, null   | `null`   | A11y `<title>{title}</title>` |
 | description | string, null   | `null`   | A11y `<desc>{desc}</desc>` |
 | size        | number, string | `null`   | Icon size. Will be converted to `{size * 1.5}rem` |

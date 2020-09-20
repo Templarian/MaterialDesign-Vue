@@ -1,22 +1,31 @@
-const definitions = {}
+const definitions = {
+  mdi: {},
+  mdil: {},
+}
 let id = 0
 
-const camelize = (str) => {
-  const arr = str.split("-")
-  const capital = arr.map((item, index) =>
-    index
-      ? item.charAt(0).toUpperCase() + item.slice(1).toLowerCase()
-      : item.toLowerCase()
-  )
+const parseIcon = (str) => {
+  const parts = str
+    .replace(/([a-z])([A-Z])/g, "$1 $2")
+    .toLowerCase()
+    .split(" ")
 
-  return capital.join("")
+  if (parts.length >= 2) {
+    const prefix = parts[0]
+    const name = parts.slice(1).join("-")
+
+    return { prefix, name }
+  }
+
+  return false
 }
 
-export const getIcon = (iconName) => {
-  const iconCamelName = camelize("mdi-" + iconName)
-
-  if (Object.prototype.hasOwnProperty.call(definitions, iconCamelName)) {
-    const iconDefinition = definitions[iconCamelName]
+export const getIcon = (icon) => {
+  if (
+    Object.prototype.hasOwnProperty.call(definitions, icon.prefix) &&
+    Object.prototype.hasOwnProperty.call(definitions[icon.prefix], icon.name)
+  ) {
+    const iconDefinition = definitions[icon.prefix][icon.name]
 
     id++
 
@@ -31,13 +40,22 @@ export const getIcon = (iconName) => {
 
 export const library = {
   add(icons) {
-    for (const [icon, path] of Object.entries(icons)) {
-      definitions[icon] = path
+    for (const [name, path] of Object.entries(icons)) {
+      const icon = parseIcon(name)
+
+      if (
+        icon &&
+        Object.prototype.hasOwnProperty.call(definitions, icon.prefix)
+      ) {
+        definitions[icon.prefix][icon.name] = path
+      }
     }
   },
   reset() {
-    for (const icon of Object.getOwnPropertyNames(definitions)) {
-      delete definitions[icon]
+    for (const [prefix, icons] of Object.entries(definitions)) {
+      for (const icon of Object.getOwnPropertyNames(icons)) {
+        delete definitions[prefix][icon]
+      }
     }
   },
 }

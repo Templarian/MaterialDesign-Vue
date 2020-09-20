@@ -1,8 +1,9 @@
 import { describe, beforeEach, it, expect } from "@jest/globals"
 import { mount } from "@vue/test-utils"
+import { mdiAccount } from "@mdi/js"
+import { mdilAccount } from "@mdi/light-js"
 import { VueMdi, library } from "../src"
 
-const mdiTestIcon = "M 10 10 H 90 V 90 H 10 L 10 10"
 const wrapperVueMdi = {
   components: { VueMdi },
   props: VueMdi.props,
@@ -13,23 +14,28 @@ describe("VueMdi component", () => {
   let wrapper
 
   beforeEach(() => {
-    library.add({ mdiTestIcon })
+    library.add({ mdiAccount, mdilAccount })
 
     wrapper = mount(wrapperVueMdi, {
       propsData: {
-        icon: "test-icon",
+        icon: ["mdil", "account"],
       },
     })
   })
 
-  it("renders an svg with path element", () => {
+  it("renders an svg with path element", async () => {
     //  Checking for the existence of an svg tag
     expect(wrapper.html()).toContain("svg")
 
     //  Cheking for rendering path element
     const path = wrapper.find("path")
 
-    expect(path.attributes("d")).toBe(mdiTestIcon)
+    expect(path.attributes("d")).toBe(mdilAccount)
+
+    //  Checking another icon
+    await wrapper.setProps({ icon: { prefix: "mdi", name: "account" } })
+
+    expect(path.attributes("d")).toBe(mdiAccount)
   })
 
   it("accepts a 'title' property", async () => {

@@ -1,13 +1,27 @@
 import { getIcon } from "../library"
 
-const removeMdiPrefix = (str) => str.replace("mdi-", "")
+const normalizeIconArgs = (icon) => {
+  if (typeof icon === "object" && icon.prefix && icon.name) {
+    return icon
+  }
+
+  if (Array.isArray(icon) && icon.length === 2) {
+    return { prefix: icon[0], name: icon[1] }
+  }
+
+  if (typeof icon === "string") {
+    return { prefix: "mdi", name: icon }
+  }
+
+  return null
+}
 
 export default {
   name: "VueMdi",
   functional: true,
   props: {
     icon: {
-      type: String,
+      type: [Object, Array, String],
       required: true,
     },
     title: {
@@ -21,6 +35,7 @@ export default {
     size: {
       type: [Object, Number],
       default: null,
+      validator: (value) => value > 0,
     },
     color: {
       type: String,
@@ -44,38 +59,52 @@ export default {
     },
   },
   render(createElement, { props }) {
-    const iconName = removeMdiPrefix(props.icon)
-    const icon = getIcon(iconName)
+    const {
+      icon: iconArgs,
+      title,
+      description,
+      size,
+      horizontal,
+      vertical,
+      rotate,
+      color,
+      spin,
+    } = props
+    const icon = normalizeIconArgs(iconArgs)
 
-    if (icon) {
+    if (icon === null) {
+      throw new Error("Invalid 'icon' property")
+    }
+
+    const renderedIcon = getIcon(icon)
+
+    if (renderedIcon) {
       const pathStyle = {}
       const transform = []
       const style = {}
 
-      if (props.size) {
-        style.width = `${props.size * 1.5}rem`
-        style.height = style.width
+      if (size) {
+        style.width = `${size * 1.5}rem`
+        style.height = `${size * 1.5}rem`
       }
 
-      if (props.horizontal) {
+      if (horizontal) {
         transform.push("scaleX(-1)")
       }
 
-      if (props.vertical) {
+      if (vertical) {
         transform.push("scaleY(-1)")
       }
 
-      if (props.rotate !== 0) {
-        transform.push(`rotate(${props.rotate}deg)`)
+      if (rotate !== 0) {
+        transform.push(`rotate(${rotate}deg)`)
       }
 
-      if (props.color !== null) {
-        pathStyle.fill = props.color
-      }
+      pathStyle.fill = color
 
       const pathElement = createElement("path", {
         attrs: {
-          d: icon.path,
+          d: renderedIcon.path,
         },
         style: pathStyle,
       })
@@ -86,14 +115,14 @@ export default {
       }
 
       let spinElement = pathElement
-      const spinSec = typeof props.spin !== "number" ? 2 : props.spin
-      let inverse = props.horizontal || props.vertical
+      const spinSec = typeof spin !== "number" ? 2 : spin
+      let inverse = horizontal || vertical
 
       if (spinSec < 0) {
         inverse = !inverse
       }
 
-      if (props.spin) {
+      if (spin) {
         spinElement = createElement(
           "g",
           {
@@ -106,7 +135,7 @@ export default {
           },
           [
             pathElement,
-            ...(!(props.horizontal || props.vertical || props.rotate !== 0)
+            ...(!(horizontal || vertical || rotate !== 0)
               ? [
                   createElement("rect", {
                     attrs: {
@@ -122,18 +151,18 @@ export default {
       }
 
       let ariaLabelledby
-      const labelledById = `icon_labelledby_${icon.id}`
-      const describedById = `icon_describedby_${icon.id}`
+      const labelledById = `icon_labelledby_${renderedIcon.id}`
+      const describedById = `icon_describedby_${renderedIcon.id}`
       let role
 
-      if (props.title) {
-        ariaLabelledby = props.description
+      if (title) {
+        ariaLabelledby = description
           ? `${labelledById} ${describedById}`
           : labelledById
       } else {
         role = "img"
 
-        if (props.description) {
+        if (description) {
           throw new Error("title attribute required when description is set")
         }
       }
@@ -150,7 +179,7 @@ export default {
           style,
         },
         [
-          ...(props.title
+          ...(title
             ? [
                 createElement(
                   "title",
@@ -159,11 +188,11 @@ export default {
                       id: labelledById,
                     },
                   },
-                  props.title
+                  title
                 ),
               ]
             : []),
-          ...(props.description
+          ...(description
             ? [
                 createElement(
                   "desc",
@@ -172,7 +201,7 @@ export default {
                       id: describedById,
                     },
                   },
-                  props.description
+                  description
                 ),
               ]
             : []),
