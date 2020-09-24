@@ -33,7 +33,7 @@ describe("VueMdi component", () => {
     expect(path.attributes("d")).toBe(mdilAccount)
 
     //  Checking another icon
-    await wrapper.setProps({ icon: { prefix: "mdi", name: "account" } })
+    await wrapper.setProps({ icon: { prefix: "mdi", name: "mdi-account" } })
 
     expect(path.attributes("d")).toBe(mdiAccount)
   })
@@ -67,6 +67,11 @@ describe("VueMdi component", () => {
 
     //  Checking the styles width and height properties of the svg element
     expect(wrapper.attributes().style).toBe("width: 3rem; height: 3rem;")
+
+    //  Checking the icon name as a class of <i> element
+    await wrapper.setProps({ size: "mdi-36px" })
+
+    expect(wrapper.attributes().style).toBe("width: 2.25rem; height: 2.25rem;")
   })
 
   it("accepts a 'color' property", async () => {

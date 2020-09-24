@@ -210,7 +210,7 @@ library.reset()
 | icon        | object, array, string | required | MDI icon property (see above). Make sure that you added this icon from [@mdi/js](https://github.com/Templarian/MaterialDesign-JS) or [@mdi/light-js](https://github.com/Templarian/MaterialDesignLight-JS) to the library |
 | title       | string, null   | `null`   | A11y `<title>{title}</title>` |
 | description | string, null   | `null`   | A11y `<desc>{desc}</desc>` |
-| size        | number, string | `null`   | Icon size. Will be converted to `{size * 1.5}rem` |
+| size        | number, string, null | `null`   | Icon size. Will be converted to `{size * 1.5}rem`. If a string is specified, it can only take the following values: `mdi-18px`, `mdi-24px`, `mdi-36px`, `mdi-48px`. |
 | color       | string         | `#000`     | Icon color. Can accept any CSS color value |
 | horizontal  | bool           | `false ` | Flip Horizontal |
 | vertical    | bool           | `false`  | Flip Vertical |

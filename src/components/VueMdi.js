@@ -1,19 +1,40 @@
 import { getIcon } from "../library"
 
+const removeMdiPrefix = (str) => str.replace(/^(mdi-)/, "")
+
 const normalizeIconArgs = (icon) => {
   if (typeof icon === "object" && icon.prefix && icon.name) {
+    icon.name = removeMdiPrefix(icon.name)
+
     return icon
   }
 
   if (Array.isArray(icon) && icon.length === 2) {
-    return { prefix: icon[0], name: icon[1] }
+    return { prefix: icon[0], name: removeMdiPrefix(icon[1]) }
   }
 
   if (typeof icon === "string") {
-    return { prefix: "mdi", name: icon }
+    return { prefix: "mdi", name: removeMdiPrefix(icon) }
   }
 
   return null
+}
+
+const normalizeIconSize = (size) => {
+  if (typeof size === "string") {
+    switch (size) {
+      case "mdi-18px":
+        return 0.75
+      case "mdi-36px":
+        return 1.5
+      case "mdi-48px":
+        return 2
+    }
+
+    return 1
+  }
+
+  return Math.abs(size)
 }
 
 export default {
@@ -33,9 +54,8 @@ export default {
       default: null,
     },
     size: {
-      type: [Object, Number],
+      type: [Object, String, Number],
       default: null,
-      validator: (value) => value > 0,
     },
     color: {
       type: String,
@@ -84,8 +104,10 @@ export default {
       const style = {}
 
       if (size) {
-        style.width = `${size * 1.5}rem`
-        style.height = `${size * 1.5}rem`
+        const iconSize = normalizeIconSize(size)
+
+        style.width = `${iconSize * 1.5}rem`
+        style.height = `${iconSize * 1.5}rem`
       }
 
       if (horizontal) {
